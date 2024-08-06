@@ -1,55 +1,116 @@
 const dialogText = document.querySelector('.dialog-text');
 const optionButtons = document.querySelectorAll('.option-button');
+const mp = 0;
+let hp = 100;
+const inventory = [];
+const skills = [];
+const titles = [];
+const karmaPoints = 0;
+const malKarmaPoints = 0;
 
-const scenes = [
-  {
-    text: "Welcome to real life! Do not enjoy your stay, and if you ever feel overworked, tired, or just want a break, don't bother coming to work at all. We can't babysit losers like you.",
+const scenes = {
+  '1': {
+    text: "What dragons? Where did you see them, boy? Oh! OH! RUUUUN!",
     options: [
-      { text: "Press space to continue.", nextScene: 1 },
+      { text: "Run.", nextScene: '1.1' },
+      { text: "Walk.", nextScene: '1.2' },
+      { text: "Stay.", nextScene: '1.3' },
+      { text: "Try to speak to the dragons.", nextScene: '1.3' }
     ]
   },
-  {
-    text: "You feel a strange sensation as you ponder over the harsh words. What will you do?",
+  '1.1': {
+    text: "Your run as fast as possible. You don't even look behind to see if the dragosn are still around. Even if they were, you would not choose to reason with a legendary creature.",
     options: [
-      { text: "Go to work.", nextScene: 2 },
-      { text: "Take a break.", nextScene: 3 }
+      { text: "Continue.", nextScene: '1.1.1' }
     ]
   },
-  {
-    text: "You decided to go to work. As you enter the office, you see your boss giving you a stern look.",
+  '1.2': {
+    text: "You start walking. Eventually the dragons see you and one lands right next to you. It looks you in the eye and says something in Dragonic.",
     options: [
-      { text: "Apologize and get to work.", nextScene: 4 },
-      { text: "Ignore and continue with your tasks.", nextScene: 5 }
+      { text: "No habla ingles.", nextScene: '1.2.1' },
+      { text: "Sorry! I don't speak Dragonic.", nextScene: '1.2.2' },
+      { text: "Do you happen to know Common?", nextScene: '1.2.3' },
+      { text: "Scream like a little girl.", nextScene: '1.2.4' }
+
     ]
   },
-  {
+  '1.1.1': {
+    text: "You find a small cave to your left, but you also notice something in the bushes to your right..",
+    options: [
+      { text: "Enter the cave.", nextScene: '1.1.1.1' },
+      { text: "Check the bushes.", nextScene: '1.1.1.2' }
+    ]
+  },
+  '1.1.2': {
     text: "You decided to take a break. You feel relaxed and refreshed.",
     options: [
-      { text: "Return to work.", nextScene: 2 },
-      { text: "Extend the break.", nextScene: 6 }
+      { text: "Return to work.", nextScene: '1.1.1' },
+      { text: "Extend the break.", nextScene: '1.1.2.1' }
     ]
   },
-  {
-    text: "You apologized and got to work. Your boss seems satisfied with your dedication.",
+  
+  '1.2.4': {
+    text: "You let out a little girl scream. The dragon died laughing.",
     options: [
-      { text: "Continue working.", nextScene: 5 },
-    ]
+      { text: "No habla ingles.", nextScene: '1' },
+      { text: "Sorry! I don't speak Dragonic.", nextScene: '1.2.2' },
+      { text: "Do you happen to know Common?", nextScene: '1.2.3' },
+      { text: "Scream like a little girl.", nextScene: '1.2.4' }
+
+    ],
+    effect: () => {
+      hp -= 20;
+      alert(`HP decreased by 20. Current HP: ${hp}`);
+    }
   },
-  {
-    text: "You ignore your boss and continue with your tasks. The day goes by uneventfully.",
+
+  '1.2.1': {
+    text: "You joking said to the dragon. Unfortunetely, they don't appreciate jokes from inferior creatures. The dragon burned you alive with his breath.",
     options: [
-      { text: "Keep working hard.", nextScene: 5 },
+      { text: "Start again.", nextScene: '1' }
     ]
   },
-  {
+  '1.2.2': {
+    text: "Ugh! Stupid creatures can't learn one damned tongue. I was asking where is the dungeon of Malagarth?",
+    options: [
+      { text: "F.. YOU!", nextScene: '1.2.2.1' },
+      { text: "Yeah. It is right over the mountain range.", nextScene: '1.2.2.2' },
+      { text: "If you let me ride you, I will show you exactly where it is.", nextScene: '1.2.2.3' },
+      { text: "I thought dragons hated adventurers. Now you want to become one?", nextScene: '1.2.2.4' }
+
+    ]
+  },
+  '1.2.2.1': {
+    text: "It happened so fast that even you don't know how you died.",
+    options: [
+      { text: "Start over.", nextScene: '1' },
+    ]
+  },
+  '1.1.1.1': {
+    text: "You enter the cave and see that somebody or something turned it into a home. There's a bed, a table, a chair even something that looks like a shower.",
+    options: [
+      { text: "Take a shower.", nextScene: '1.1.1.2' },
+      { text: "Sleep in the bed.", nextScene: '1.1.1.2' },
+      { text: "Wait for the dragons to pass.", nextScene: '1.1.1.2' },
+      { text: "Search for anything of value.", nextScene: '1.1.1.2' },
+
+    ]
+  },
+  '1.1.1.2': {
+    text: "A snake bit your face and melted it. You died!",
+    options: [
+      { text: "Start over.", nextScene: '1' },
+    ]
+  },
+  '1.1.2.1': {
     text: "You extended the break and eventually decided to quit your job. Freedom feels good!",
     options: [
-      { text: "Start a new adventure.", nextScene: 0 },
+      { text: "Start a new adventure.", nextScene: '1' },
     ]
   }
-];
+};
 
-let currentScene = 0;
+let currentScene = '1';
 
 function showScene(sceneIndex) {
   const scene = scenes[sceneIndex];
@@ -62,6 +123,11 @@ function showScene(sceneIndex) {
       button.style.display = 'none';
     }
   });
+
+  // Check if the scene has an effect and execute it
+  if (scene.effect) {
+    scene.effect();
+  }
 }
 
 function chooseOption(optionIndex) {

@@ -27,7 +27,8 @@ body {
 
 .options {
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  align-items: flex-start; /* Align buttons to the left */
 }
 
 .option-button {
@@ -39,8 +40,15 @@ body {
   color: #ffffff;
   cursor: pointer;
   transition: background-color 0.3s;
+  margin-bottom: 10px;
+  width: 100%; /* Ensure buttons stretch to the width of the container */
+  text-align: left;
 }
 
 .option-button:hover {
   background-color: #555555;
+}
+
+.option-button:last-child {
+  margin-bottom: 0;
 }
